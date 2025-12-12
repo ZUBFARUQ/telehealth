@@ -1,0 +1,8 @@
+{
+  "name": "TeleHealth Connect",
+  "description": "A comprehensive tele-consultation platform connecting patients with healthcare providers, featuring AI-powered triage and secure video consultations.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
