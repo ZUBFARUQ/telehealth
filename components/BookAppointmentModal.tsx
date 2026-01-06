@@ -16,6 +16,23 @@ const BookAppointmentModal: React.FC<BookAppointmentModalProps> = ({ doctor, isO
   const [time, setTime] = useState('');
   const [notes, setNotes] = useState('');
 
+  // Handle Escape Key to Close
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [isOpen, onClose]);
+
   // Reset form when opening
   useEffect(() => {
     if (isOpen) {
@@ -46,17 +63,23 @@ const BookAppointmentModal: React.FC<BookAppointmentModalProps> = ({ doctor, isO
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+    >
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh] animate-scale-in">
         {/* Header */}
         <div className="bg-blue-600 p-6 text-white relative">
           <button 
             onClick={onClose}
-            className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors"
+            className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white rounded-full p-1"
+            aria-label="Close Modal"
           >
             <X className="w-6 h-6" />
           </button>
-          <h2 className="text-xl font-bold mb-1">{t('booking.title')}</h2>
+          <h2 id="modal-title" className="text-xl font-bold mb-1">{t('booking.title')}</h2>
           <p className="text-blue-100 text-sm">{t('booking.subtitle')}</p>
         </div>
 
@@ -64,7 +87,7 @@ const BookAppointmentModal: React.FC<BookAppointmentModalProps> = ({ doctor, isO
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {/* Doctor Info Summary */}
           <div className="flex items-center gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
-             <img src={doctor.imageUrl} alt={doctor.name} className="w-16 h-16 rounded-full object-cover border-2 border-white shadow-sm" />
+             <img src={doctor.imageUrl} alt="" className="w-16 h-16 rounded-full object-cover border-2 border-white shadow-sm" aria-hidden="true" />
              <div>
                <h3 className="font-bold text-slate-900">{doctor.name}</h3>
                <p className="text-blue-600 text-sm font-medium">{doctor.specialty}</p>
@@ -75,11 +98,12 @@ const BookAppointmentModal: React.FC<BookAppointmentModalProps> = ({ doctor, isO
           <form id="booking-form" onSubmit={handleSubmit} className="space-y-4">
              {/* Date Selection */}
              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                   <Calendar className="w-4 h-4 text-blue-600" />
+                <label htmlFor="date-input" className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                   <Calendar className="w-4 h-4 text-blue-600" aria-hidden="true" />
                    {t('booking.date')}
                 </label>
                 <input 
+                  id="date-input"
                   type="date" 
                   required
                   min={new Date().toISOString().split('T')[0]}
@@ -92,16 +116,17 @@ const BookAppointmentModal: React.FC<BookAppointmentModalProps> = ({ doctor, isO
              {/* Time Selection */}
              <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                   <Clock className="w-4 h-4 text-blue-600" />
+                   <Clock className="w-4 h-4 text-blue-600" aria-hidden="true" />
                    {t('booking.time')}
                 </label>
-                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2" role="group" aria-label="Select a time slot">
                    {timeSlots.map(slot => (
                      <button
                        key={slot}
                        type="button"
                        onClick={() => setTime(slot)}
-                       className={`py-2 px-1 rounded-lg text-sm font-medium transition-all ${
+                       aria-pressed={time === slot}
+                       className={`py-2 px-1 rounded-lg text-sm font-medium transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                          time === slot 
                            ? 'bg-blue-600 text-white shadow-md' 
                            : 'bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200'
@@ -115,11 +140,12 @@ const BookAppointmentModal: React.FC<BookAppointmentModalProps> = ({ doctor, isO
 
              {/* Notes */}
              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                   <FileText className="w-4 h-4 text-blue-600" />
+                <label htmlFor="notes-input" className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                   <FileText className="w-4 h-4 text-blue-600" aria-hidden="true" />
                    {t('booking.reason')}
                 </label>
                 <textarea 
+                  id="notes-input"
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder={t('booking.reason_ph')}
@@ -135,7 +161,7 @@ const BookAppointmentModal: React.FC<BookAppointmentModalProps> = ({ doctor, isO
              <button 
                type="button"
                onClick={onClose}
-               className="flex-1 py-3 px-4 bg-slate-100 text-slate-700 rounded-xl font-medium hover:bg-slate-200 transition-colors"
+               className="flex-1 py-3 px-4 bg-slate-100 text-slate-700 rounded-xl font-medium hover:bg-slate-200 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-500"
              >
                {t('booking.cancel')}
              </button>
@@ -143,7 +169,7 @@ const BookAppointmentModal: React.FC<BookAppointmentModalProps> = ({ doctor, isO
                type="submit"
                form="booking-form"
                disabled={!date || !time}
-               className="flex-[2] py-3 px-4 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+               className="flex-[2] py-3 px-4 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
              >
                {t('booking.confirm')}
                <CheckCircle className="w-4 h-4" />

@@ -58,13 +58,15 @@ const VideoConsultation: React.FC<VideoConsultationProps> = ({ appointment, onEn
             <div>
                <h3 className="font-semibold">{appointment.doctorName}</h3>
                <div className="flex items-center gap-2 text-xs text-slate-300">
-                  <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-                  {formatTime(callDuration)}
+                  <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" aria-hidden="true"></span>
+                  <span aria-label={`Call duration ${formatTime(callDuration)}`}>{formatTime(callDuration)}</span>
                </div>
             </div>
          </div>
          <div className="flex items-center gap-4">
-            <Settings className="w-5 h-5 text-slate-400 cursor-pointer hover:text-white" />
+            <button aria-label="Settings" className="text-slate-400 hover:text-white transition-colors">
+              <Settings className="w-5 h-5" />
+            </button>
          </div>
       </div>
 
@@ -74,13 +76,14 @@ const VideoConsultation: React.FC<VideoConsultationProps> = ({ appointment, onEn
             {/* Using a large image to simulate the doctor's video feed */}
             <img 
                src={appointment.doctorImage} 
-               alt="Remote Doctor" 
+               alt="" 
                className="w-full h-full object-cover opacity-90 blur-[2px]"
+               aria-hidden="true"
             />
             <div className="absolute inset-0 bg-black/20"></div>
             <div className="absolute text-center z-10">
                <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white/20 mx-auto mb-4 shadow-2xl">
-                  <img src={appointment.doctorImage} className="w-full h-full object-cover" alt="Doctor" />
+                  <img src={appointment.doctorImage} className="w-full h-full object-cover" alt={appointment.doctorName} />
                </div>
                <h2 className="text-2xl font-bold text-white mb-2">{appointment.doctorName}</h2>
                <p className="text-slate-200">Waiting for connection...</p>
@@ -88,7 +91,7 @@ const VideoConsultation: React.FC<VideoConsultationProps> = ({ appointment, onEn
         </div>
 
         {/* Local Video (Self View) */}
-        <div className="absolute bottom-24 right-4 w-32 md:w-48 aspect-video bg-black rounded-lg overflow-hidden border border-slate-600 shadow-xl">
+        <div className="absolute bottom-24 right-4 w-32 md:w-48 aspect-video bg-black rounded-lg overflow-hidden border border-slate-600 shadow-xl" aria-label="Your Video">
            {!isVideoOff ? (
               <video 
                 ref={localVideoRef} 
@@ -112,30 +115,39 @@ const VideoConsultation: React.FC<VideoConsultationProps> = ({ appointment, onEn
       <div className="bg-slate-900 p-6 flex justify-center items-center gap-6">
          <button 
            onClick={() => setIsMuted(!isMuted)}
-           className={`p-4 rounded-full transition-all ${isMuted ? 'bg-red-500 text-white' : 'bg-slate-700 text-white hover:bg-slate-600'}`}
+           className={`p-4 rounded-full transition-all focus:outline-none focus:ring-4 focus:ring-slate-500 ${isMuted ? 'bg-red-500 text-white' : 'bg-slate-700 text-white hover:bg-slate-600'}`}
+           aria-label={isMuted ? "Unmute Microphone" : "Mute Microphone"}
          >
            {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
          </button>
          
          <button 
            onClick={() => setIsVideoOff(!isVideoOff)}
-           className={`p-4 rounded-full transition-all ${isVideoOff ? 'bg-red-500 text-white' : 'bg-slate-700 text-white hover:bg-slate-600'}`}
+           className={`p-4 rounded-full transition-all focus:outline-none focus:ring-4 focus:ring-slate-500 ${isVideoOff ? 'bg-red-500 text-white' : 'bg-slate-700 text-white hover:bg-slate-600'}`}
+           aria-label={isVideoOff ? "Turn Video On" : "Turn Video Off"}
          >
            {isVideoOff ? <VideoOff className="w-6 h-6" /> : <Video className="w-6 h-6" />}
          </button>
 
          <button 
            onClick={onEndCall}
-           className="p-4 rounded-full bg-red-600 text-white hover:bg-red-700 transition-all scale-110 shadow-lg shadow-red-900/50"
+           className="p-4 rounded-full bg-red-600 text-white hover:bg-red-700 transition-all scale-110 shadow-lg shadow-red-900/50 focus:outline-none focus:ring-4 focus:ring-red-400"
+           aria-label="End Call"
          >
            <PhoneOff className="w-6 h-6" />
          </button>
 
-         <button className="p-4 rounded-full bg-slate-700 text-white hover:bg-slate-600 transition-all hidden md:block">
+         <button 
+            className="p-4 rounded-full bg-slate-700 text-white hover:bg-slate-600 transition-all hidden md:block focus:outline-none focus:ring-4 focus:ring-slate-500"
+            aria-label="Open Chat"
+         >
            <MessageSquare className="w-6 h-6" />
          </button>
 
-         <button className="p-4 rounded-full bg-slate-700 text-white hover:bg-slate-600 transition-all hidden md:block">
+         <button 
+            className="p-4 rounded-full bg-slate-700 text-white hover:bg-slate-600 transition-all hidden md:block focus:outline-none focus:ring-4 focus:ring-slate-500"
+            aria-label="Participants"
+         >
            <Users className="w-6 h-6" />
          </button>
       </div>

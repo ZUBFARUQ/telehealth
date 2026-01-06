@@ -113,7 +113,7 @@ const AIChat: React.FC<AIChatProps> = ({ onFindDoctor }) => {
       <div className="p-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="bg-teal-100 p-2 rounded-full">
-             <Bot className="w-5 h-5 text-teal-600" />
+             <Bot className="w-5 h-5 text-teal-600" aria-hidden="true" />
           </div>
           <div>
             <h3 className="font-bold text-slate-800">{t('ai.title')}</h3>
@@ -122,21 +122,26 @@ const AIChat: React.FC<AIChatProps> = ({ onFindDoctor }) => {
         </div>
         <button 
           onClick={() => onFindDoctor()}
-          className="text-xs font-medium bg-white border border-slate-200 text-slate-600 px-3 py-1.5 rounded-lg hover:bg-slate-50 hover:text-blue-600 transition-colors"
+          className="text-xs font-medium bg-white border border-slate-200 text-slate-600 px-3 py-1.5 rounded-lg hover:bg-slate-50 hover:text-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500"
         >
           {t('ai.browse')}
         </button>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-6 bg-slate-50/50">
+      <div 
+        className="flex-1 overflow-y-auto p-4 space-y-6 bg-slate-50/50" 
+        aria-live="polite" 
+        aria-atomic="false"
+        role="log"
+      >
         {messages.map((msg) => {
           const isUser = msg.role === 'user';
           return (
             <div key={msg.id} className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
               <div className={`flex gap-3 max-w-[90%] md:max-w-[75%] ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${isUser ? 'bg-blue-600' : 'bg-teal-600'}`}>
-                  {isUser ? <User className="w-4 h-4 text-white" /> : <Sparkles className="w-4 h-4 text-white" />}
+                  {isUser ? <User className="w-4 h-4 text-white" aria-hidden="true" /> : <Sparkles className="w-4 h-4 text-white" aria-hidden="true" />}
                 </div>
                 
                 <div className={`p-4 rounded-2xl text-sm leading-relaxed shadow-sm relative group ${
@@ -169,10 +174,10 @@ const AIChat: React.FC<AIChatProps> = ({ onFindDoctor }) => {
           <div className="flex justify-start">
              <div className="flex gap-3">
                 <div className="w-8 h-8 rounded-full bg-teal-600 flex items-center justify-center shrink-0">
-                   <Sparkles className="w-4 h-4 text-white" />
+                   <Sparkles className="w-4 h-4 text-white" aria-hidden="true" />
                 </div>
                 <div className="bg-white border border-slate-100 p-4 rounded-2xl rounded-bl-none shadow-sm flex items-center gap-2">
-                   <Loader2 className="w-4 h-4 animate-spin text-teal-600" />
+                   <Loader2 className="w-4 h-4 animate-spin text-teal-600" aria-hidden="true" />
                    <span className="text-sm text-slate-500">{t('ai.thinking')}</span>
                 </div>
              </div>
@@ -204,6 +209,7 @@ const AIChat: React.FC<AIChatProps> = ({ onFindDoctor }) => {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder={t('ai.placeholder')}
+              aria-label={t('ai.placeholder')}
               className="w-full pl-4 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none max-h-32 min-h-[50px] scrollbar-hide"
               rows={1}
             />

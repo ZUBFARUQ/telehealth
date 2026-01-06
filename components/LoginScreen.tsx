@@ -69,11 +69,12 @@ const LoginScreen: React.FC = () => {
               <button
                 key={role.id}
                 onClick={() => setSelectedRole(role.id)}
-                className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-left group flex flex-col h-full animate-scale-in"
+                className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-left group flex flex-col h-full animate-scale-in focus:outline-none focus:ring-4 focus:ring-blue-100"
                 style={{ animationDelay: `${index * 100}ms` }}
+                aria-label={`Login as ${role.label}`}
               >
                 <div className={`w-14 h-14 rounded-xl ${role.lightColor} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
-                  <Icon className="w-7 h-7" />
+                  <Icon className="w-7 h-7" aria-hidden="true" />
                 </div>
                 <h3 className="text-lg font-bold text-slate-900 mb-2">{role.label}</h3>
                 <p className="text-sm text-slate-500 leading-relaxed">{role.desc}</p>
@@ -127,7 +128,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ role, onBack, onLogin }) => {
           <div className="p-8">
              <button 
                onClick={onBack}
-               className="flex items-center text-slate-400 hover:text-slate-600 transition-colors mb-6 text-sm font-medium"
+               className="flex items-center text-slate-400 hover:text-slate-600 transition-colors mb-6 text-sm font-medium focus:outline-none focus:text-blue-600"
+               aria-label="Go back to role selection"
              >
                 <ArrowLeft className="w-4 h-4 mr-1" />
                 {t('login.back')}
@@ -142,23 +144,23 @@ const LoginForm: React.FC<LoginFormProps> = ({ role, onBack, onLogin }) => {
              <div className="space-y-3 mb-6">
                 <button 
                   onClick={handleSubmit} 
-                  className="w-full flex items-center justify-center gap-3 bg-white border border-slate-200 text-slate-700 py-2.5 rounded-lg hover:bg-slate-50 transition-colors font-medium text-sm"
+                  className="w-full flex items-center justify-center gap-3 bg-white border border-slate-200 text-slate-700 py-2.5 rounded-lg hover:bg-slate-50 transition-colors font-medium text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                   <Chrome className="w-5 h-5 text-red-500" /> 
+                   <Chrome className="w-5 h-5 text-red-500" aria-hidden="true" /> 
                    {t('login.sign_in_google')}
                 </button>
                 <button 
                   onClick={handleSubmit}
-                  className="w-full flex items-center justify-center gap-3 bg-black text-white py-2.5 rounded-lg hover:bg-gray-900 transition-colors font-medium text-sm"
+                  className="w-full flex items-center justify-center gap-3 bg-black text-white py-2.5 rounded-lg hover:bg-gray-900 transition-colors font-medium text-sm focus:outline-none focus:ring-2 focus:ring-gray-500"
                 >
                    {/* Using SVG for Apple icon simulation */}
-                   <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.74 1.18 0 2.45-1.64 4.07-1.48 1.4.15 2.53.95 3.22 1.94-.03.04-1.95 1.13-2.01 4.35-.06 3.09 2.58 4.35 2.66 4.41-2.18 3.86-3.86 4.96-5.02 6.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.16 2.29-2.03 4.34-3.74 4.25z"/></svg>
+                   <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.74 1.18 0 2.45-1.64 4.07-1.48 1.4.15 2.53.95 3.22 1.94-.03.04-1.95 1.13-2.01 4.35-.06 3.09 2.58 4.35 2.66 4.41-2.18 3.86-3.86 4.96-5.02 6.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.16 2.29-2.03 4.34-3.74 4.25z"/></svg>
                    {t('login.sign_in_apple')}
                 </button>
              </div>
 
              <div className="relative mb-6">
-                <div className="absolute inset-0 flex items-center">
+                <div className="absolute inset-0 flex items-center" aria-hidden="true">
                    <div className="w-full border-t border-slate-200"></div>
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
@@ -167,16 +169,20 @@ const LoginForm: React.FC<LoginFormProps> = ({ role, onBack, onLogin }) => {
              </div>
 
              {/* Toggle Auth Method */}
-             <div className="flex bg-slate-100 p-1 rounded-lg mb-6">
+             <div className="flex bg-slate-100 p-1 rounded-lg mb-6" role="tablist">
                 <button 
+                  role="tab"
+                  aria-selected={authMethod === 'email'}
                   onClick={() => setAuthMethod('email')}
-                  className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${authMethod === 'email' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                  className={`flex-1 py-2 text-sm font-medium rounded-md transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 ${authMethod === 'email' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                 >
                    {t('login.email_tab')}
                 </button>
                 <button 
+                  role="tab"
+                  aria-selected={authMethod === 'phone'}
                   onClick={() => setAuthMethod('phone')}
-                  className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${authMethod === 'phone' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                  className={`flex-1 py-2 text-sm font-medium rounded-md transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 ${authMethod === 'phone' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                 >
                    {t('login.phone_tab')}
                 </button>
@@ -186,10 +192,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ role, onBack, onLogin }) => {
                 {authMethod === 'email' ? (
                    <>
                      <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">{t('login.email_label')}</label>
+                        <label htmlFor="email" className="block text-xs font-semibold text-slate-700 mb-1">{t('login.email_label')}</label>
                         <div className="relative">
-                           <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                           <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" aria-hidden="true" />
                            <input 
+                             id="email"
                              type="email" 
                              required
                              placeholder={t('login.email_placeholder')}
@@ -201,12 +208,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ role, onBack, onLogin }) => {
                      </div>
                      <div>
                         <div className="flex justify-between items-center mb-1">
-                           <label className="block text-xs font-semibold text-slate-700">{t('login.password_label')}</label>
+                           <label htmlFor="password" className="block text-xs font-semibold text-slate-700">{t('login.password_label')}</label>
                            <button type="button" className="text-xs text-blue-600 hover:underline">{t('login.forgot_password')}</button>
                         </div>
                         <div className="relative">
-                           <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                           <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" aria-hidden="true" />
                            <input 
+                             id="password"
                              type="password" 
                              required
                              placeholder={t('login.password_placeholder')}
@@ -219,10 +227,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ role, onBack, onLogin }) => {
                    </>
                 ) : (
                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">{t('login.phone_label')}</label>
+                      <label htmlFor="phone" className="block text-xs font-semibold text-slate-700 mb-1">{t('login.phone_label')}</label>
                       <div className="relative">
-                         <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                         <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" aria-hidden="true" />
                          <input 
+                           id="phone"
                            type="tel" 
                            required
                            placeholder={t('login.phone_placeholder')}
@@ -238,9 +247,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ role, onBack, onLogin }) => {
                 <button 
                   type="submit" 
                   disabled={isLoading}
-                  className="w-full py-3 bg-blue-600 text-white rounded-lg font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-6"
+                  className="w-full py-3 bg-blue-600 text-white rounded-lg font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-6 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  {isLoading && <Loader2 className="w-5 h-5 animate-spin" />}
+                  {isLoading && <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />}
                   {isLoading ? t('login.processing') : t('login.login_btn')}
                 </button>
              </form>

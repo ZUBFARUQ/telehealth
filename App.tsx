@@ -39,6 +39,7 @@ function AppContent() {
              onClick={() => setShowLogin(false)}
              className="fixed top-4 left-4 z-50 p-2 bg-white rounded-full shadow-md text-slate-600 hover:text-blue-600 transition-colors border border-slate-200"
              title="Back to Home"
+             aria-label="Back to Home"
           >
              <ArrowLeft className="w-6 h-6" />
           </button>
@@ -104,10 +105,22 @@ function AppContent() {
 
   return (
     <div className="flex h-screen bg-slate-50 text-slate-900 font-sans overflow-hidden">
+      {/* Skip to Content Link for Keyboard Users */}
+      <a 
+        href="#main-content" 
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-6 focus:py-3 focus:bg-white focus:text-blue-800 focus:font-bold focus:rounded-lg focus:shadow-xl ring-2 ring-blue-600 transition-all"
+      >
+        Skip to main content
+      </a>
+
       {/* Mobile Header */}
       <div className="md:hidden fixed top-0 w-full z-40 bg-white border-b border-slate-200 p-4 flex justify-between items-center">
         <h1 className="text-lg font-bold text-blue-600">TeleHealth+</h1>
-        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+        <button 
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label={isMobileMenuOpen ? "Close Menu" : "Open Menu"}
+          aria-expanded={isMobileMenuOpen}
+        >
           {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
@@ -119,16 +132,16 @@ function AppContent() {
       {isMobileMenuOpen && (
         <div className="md:hidden fixed inset-0 z-30 bg-slate-900/50 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)}>
           <div className="bg-white w-3/4 h-full pt-16" onClick={e => e.stopPropagation()}>
-             <div className="flex flex-col p-4 space-y-4">
+             <nav className="flex flex-col p-4 space-y-4" aria-label="Mobile Navigation">
                 <button onClick={() => { setView('dashboard'); setIsMobileMenuOpen(false); }} className={`p-3 rounded-lg text-left ${currentView === 'dashboard' ? 'bg-blue-50 text-blue-600' : ''}`}>Dashboard</button>
-                {/* Simplified Mobile Nav for Demo - Ideally should mirror Navigation.tsx logic */}
-             </div>
+                {/* Simplified Mobile Nav for Demo */}
+             </nav>
           </div>
         </div>
       )}
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto p-4 md:p-8 pt-20 md:pt-8 w-full relative">
+      <main id="main-content" className="flex-1 overflow-y-auto p-4 md:p-8 pt-20 md:pt-8 w-full relative" role="main">
         <div className="max-w-6xl mx-auto h-full pb-24 md:pb-0">
           {currentView === 'dashboard' && (
             <Dashboard 
@@ -182,7 +195,7 @@ function AppContent() {
 
       {/* Notification Toast */}
       {notification && (
-        <div className="fixed bottom-4 right-24 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg animate-bounce flex items-center gap-2 z-50">
+        <div role="status" aria-live="polite" className="fixed bottom-4 right-24 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg animate-bounce flex items-center gap-2 z-50">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
           {notification}
         </div>

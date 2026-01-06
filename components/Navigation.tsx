@@ -56,13 +56,13 @@ const Navigation: React.FC<NavigationProps> = ({ currentView, setView }) => {
   return (
     <aside className="hidden md:flex flex-col w-64 bg-white border-r border-slate-200 h-screen sticky top-0">
       <div className="p-6 flex items-center space-x-2">
-        <div className="bg-blue-600 p-2 rounded-lg">
+        <div className="bg-blue-600 p-2 rounded-lg" aria-hidden="true">
           <Activity className="w-6 h-6 text-white" />
         </div>
         <h1 className="text-xl font-bold text-slate-800">TeleHealth+</h1>
       </div>
 
-      <nav className="flex-1 px-4 space-y-2 mt-4">
+      <nav className="flex-1 px-4 space-y-2 mt-4" aria-label="Main Navigation">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = currentView === item.id;
@@ -70,13 +70,14 @@ const Navigation: React.FC<NavigationProps> = ({ currentView, setView }) => {
             <button
               key={item.id}
               onClick={() => setView(item.id as ViewState)}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
+              aria-current={isActive ? 'page' : undefined}
+              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                 isActive
                   ? 'bg-blue-50 text-blue-600 font-medium'
                   : 'text-slate-600 hover:bg-slate-50'
               }`}
             >
-              <Icon className={`w-5 h-5 ${isActive ? 'text-blue-600' : 'text-slate-400'}`} />
+              <Icon className={`w-5 h-5 ${isActive ? 'text-blue-600' : 'text-slate-400'}`} aria-hidden="true" />
               <span>{item.label}</span>
             </button>
           );
@@ -85,16 +86,18 @@ const Navigation: React.FC<NavigationProps> = ({ currentView, setView }) => {
 
       {/* Language Toggle */}
       <div className="px-6 py-2">
-        <div className="flex bg-slate-100 p-1 rounded-lg">
+        <div className="flex bg-slate-100 p-1 rounded-lg" role="group" aria-label="Language Selection">
           <button 
             onClick={() => setLanguage('en')}
-            className={`flex-1 text-xs font-medium py-1.5 rounded-md transition-colors ${language === 'en' ? 'bg-white shadow text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
+            aria-pressed={language === 'en'}
+            className={`flex-1 text-xs font-medium py-1.5 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 ${language === 'en' ? 'bg-white shadow text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
           >
             English
           </button>
           <button 
             onClick={() => setLanguage('ha')}
-            className={`flex-1 text-xs font-medium py-1.5 rounded-md transition-colors ${language === 'ha' ? 'bg-white shadow text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
+            aria-pressed={language === 'ha'}
+            className={`flex-1 text-xs font-medium py-1.5 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 ${language === 'ha' ? 'bg-white shadow text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
           >
             Hausa
           </button>
@@ -115,8 +118,9 @@ const Navigation: React.FC<NavigationProps> = ({ currentView, setView }) => {
             </div>
             <button 
               onClick={logout}
-              className="text-slate-400 hover:text-slate-600" 
+              className="text-slate-400 hover:text-slate-600 focus:outline-none focus:text-blue-600" 
               title={t('nav.logout')}
+              aria-label={t('nav.logout')}
             >
               <LogOut className="w-5 h-5" />
             </button>
